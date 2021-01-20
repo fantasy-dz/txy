@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<H1>Welcome</H1>
+<button onclick="start()">start Server</button>
+<label id="startInfo"></label>
+<p/>
+<button onclick="stop()">stop Server</button>
+<label id="stopInfo"></label>
+<div class="waifu">
+    <div class="waifu-tips"></div>
+    <canvas id="live2d" width="280" height="250" class="live2d"></canvas>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+    function start() {
+        sendAjax("/startServer","startInfo");
+    }
+
+    function stop() {
+        sendAjax("/stopServer","stopInfo");
+    }
+
+    function sendAjax(url,id) {
+        let xmlhttp;
+        if (window.XMLHttpRequest) {
+            //  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // IE6, IE5 浏览器执行代码
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                document.getElementById(id).innerText = xmlhttp.responseText;
+            }
+        }
+        xmlhttp.open("GET",url,true);
+        xmlhttp.send();
+    }
+</script>
