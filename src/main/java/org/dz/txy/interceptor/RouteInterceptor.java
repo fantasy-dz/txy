@@ -10,7 +10,12 @@ public class RouteInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        return false;
+        if (true) {
+            return true;
+        } else {
+            request.getRequestDispatcher("/index.html").forward(request,response);
+            return false;
+        }
     }
 
     @Override

@@ -12,6 +12,14 @@
 <p/>
 <button onclick="stop()">stop Server</button>
 <label id="stopInfo"></label>
+<p/>
+<button onclick="test()">test</button>
+<label id="testInfo"></label>
+
+<form method="post" action="/uploadExcel" enctype="multipart/form-data">
+    <input type="file" name="file"><br>
+    <input type="submit" value="提交">
+</form>
 <div class="waifu">
     <div class="waifu-tips"></div>
     <canvas id="live2d" width="280" height="250" class="live2d"></canvas>
@@ -21,14 +29,23 @@
 
 <script type="text/javascript">
     function start() {
-        sendAjax("/startServer","startInfo");
+        sendAjax("/startServer", "startInfo", false, false, null);
     }
 
     function stop() {
-        sendAjax("/stopServer","stopInfo");
+        sendAjax("/stopServer", "stopInfo", false, false, null);
     }
 
-    function sendAjax(url,id) {
+    function test() {
+        let person = {'name': 'lihua', 'age': 12};
+        let child = {'childName': 'wangwu', 'childAge': 5};
+        let children = [child, child];
+        let obj = {person, 'list':children};
+        let param = JSON.stringify(obj);
+        sendAjax("/test", "testInfo", true, true, param);
+    }
+
+    function sendAjax(url, id, isPost, isJson, param) {
         let xmlhttp;
         if (window.XMLHttpRequest) {
             //  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
@@ -38,11 +55,22 @@
             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
         xmlhttp.onreadystatechange = function () {
+            // 回调函数
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 document.getElementById(id).innerText = xmlhttp.responseText;
             }
         }
-        xmlhttp.open("GET",url,true);
-        xmlhttp.send();
+        if (isPost) {
+            xmlhttp.open("POST", url, true);
+            if (!isJson) {
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            } else {
+                xmlhttp.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+            }
+            xmlhttp.send(param);
+        } else {
+            xmlhttp.open("GET", url, true);
+            xmlhttp.send();
+        }
     }
 </script>

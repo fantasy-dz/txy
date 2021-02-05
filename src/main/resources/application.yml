@@ -3,3 +3,7 @@ server:
 spring:
   application:
     name: aly
+  servlet:
+    multipart:
+      max-file-size: 10MB #单文件最大值
+      max-request-size: 20MB #多个文件总大小
